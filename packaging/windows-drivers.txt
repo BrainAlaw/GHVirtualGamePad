@@ -1,0 +1,11 @@
+GHVirtualGamePad - Windows driver requirements
+
+Real controller mode needs ViGEmBus and Interception. Setup detects existing driver services and offers to install only missing dependencies. The application itself runs without administrator rights.
+
+Interception installs SYSTEM-WIDE keyboard and mouse filter drivers. GHVirtualGamePad only captures keyboards explicitly selected in the application. Never select your everyday keyboard or a shared keyboard/mouse receiver. Installing drivers requires administrator approval and a Windows restart. Save your work first.
+
+ViGEmBus is retired upstream. Interception is legacy software, tested upstream through Windows 10. Windows 11 compatibility depends on the specific system and security policy. If Windows blocks a driver, stop: do NOT disable Secure Boot, Memory Integrity or driver-signature enforcement.
+
+The application's source code is MIT. Interception's library is LGPL; its upstream binary redistribution terms are for NON-COMMERCIAL use. Commercial use requires a separate upstream license. Bundled license texts and the matching client-library source are in _internal/notices/Interception.
+
+Driver installation is optional: uncheck the tasks to use existing dependencies or simulation mode. Uninstalling GHVirtualGamePad does NOT remove shared drivers or saved profiles. Windows hardware acceptance testing is still required for this release candidate.

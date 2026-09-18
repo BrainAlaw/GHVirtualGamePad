@@ -45,7 +45,7 @@ ApplicationWindow {
                 Label { text: "Two devices. Two players. Your mappings."; color: "#91a0b9" }
             }
             Item { Layout.fillWidth: true }
-            Label { text: bridge.demoMode ? "WINDOWS / SIMULATION" : "LINUX / EVDEV"; color: "#63dfb3" }
+            Label { text: bridge.demoMode ? "SIMULATION" : (bridge.windowsMode ? "WINDOWS / XBOX 360" : "LINUX / EVDEV"); color: "#63dfb3" }
         }
         RowLayout {
             Repeater {
@@ -73,7 +73,7 @@ ApplicationWindow {
                 onActivated: index => { bridge.selectDevice(index); demoInput.forceActiveFocus() }
             }
             Button { text: "Save profiles"; onClicked: bridge.save() }
-            Button { visible: !bridge.demoMode; text: "Enable device access"; enabled: !bridge.isRunning && devices.currentIndex > 0; onClicked: setupDialog.open() }
+            Button { visible: !bridge.demoMode && !bridge.windowsMode; text: "Enable device access"; enabled: !bridge.isRunning && devices.currentIndex > 0; onClicked: setupDialog.open() }
             Button { text: "Diagnostics"; onClicked: bridge.exportReport() }
         }
         RowLayout {

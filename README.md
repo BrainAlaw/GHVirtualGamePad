@@ -1,81 +1,140 @@
-<p align="center"><img src="assets/ghvirtualgamepad.svg" width="128" alt="GHVirtualGamePad icon"></p>
+<p align="center"><img src="assets/ghvirtualgamepad.svg" width="112" alt="GHVirtualGamePad"></p>
 
 # GHVirtualGamePad
 
-Turn two USB keyboard-mode guitars into two independent virtual gamepads.
+### Two guitars. Two players. No shared keyboard input.
 
-Designed for DOYO guitars, Guitar Hero World Tour: Definitive Edition and Moonlight on Linux. Each player selects a separate receiver, teaches the app their controls, and starts a virtual controller. No hardcoded keyboard layout is required.
+[![Checks](https://github.com/BrainAlaw/GHVirtualGamePad/actions/workflows/check.yml/badge.svg)](https://github.com/BrainAlaw/GHVirtualGamePad/actions/workflows/check.yml)
+[![License: MIT](https://img.shields.io/badge/code-MIT-63dfb3)](LICENSE)
 
-## Platform status
+Turn two USB keyboard-mode guitars into **two independent virtual gamepads**, on Linux or Windows. Pick each receiver, click a control, press its physical button, and play.
 
-| Platform | Status |
-| --- | --- |
-| Linux / CachyOS | Hardware functionality reported working by the owner; automated core and GUI tests pass. |
-| Windows | GUI and simulator only. Physical keyboard capture and virtual Xbox output are **not implemented yet**. |
-| Public binary release | Pending full Windows support and installer validation. |
+Built for DOYO guitars, **Guitar Hero World Tour: Definitive Edition** and **Moonlight**. This is a per-device keyboard-to-controller mapper: no hardcoded guitar layout, account, subscription or network service.
 
-The hardware report is not a certification of every distribution, receiver or streaming configuration. The Linux output is an evdev/uinput gamepad with an Xbox-compatible layout, not an emulation of the Xbox USB protocol. The streaming host determines the controller type exposed to the game.
+**[Download installers](https://github.com/BrainAlaw/GHVirtualGamePad/releases) · [Polski](docs/README.pl.md) · [Report a problem](https://github.com/BrainAlaw/GHVirtualGamePad/issues)**
 
-## Features
+![Application preview in simulation mode](docs/screenshot.png)
 
-- Separate Player 1 and Player 2 devices, mappings and states.
-- Live USB receiver list, grouping a receiver's input interfaces.
-- Click-to-bind guitar diagram and complete mapping list.
+## What you get
+
+- Independent devices, bindings and live input feedback for Player 1 and Player 2.
+- Click-to-bind guitar diagram **and a complete clickable mapping list**.
 - Five frets, strum, D-pad, Start, Select, Extra and whammy.
-- Digital whammy converted to a smooth axis with configurable rise and return timing.
-- Exclusive Linux capture while running, preventing duplicate keyboard input.
-- Neutral state on disconnection and reconnect at the same USB port.
-- Saved profiles, live feedback and diagnostic snapshots without keystroke history.
+- **Digital whammy → smooth virtual axis**, with adjustable press and return times.
+- Exclusive capture of selected keyboards while playing; unrelated keyboards stay usable.
+- Saved profiles, desktop/menu icon, installers and offline application runtimes.
+- A hardware-free demo for exploring the interface.
 
-The operating system must see separate devices. Software cannot separate two guitars if one receiver merges both into identical, indistinguishable keyboard events.
+You need distinguishable input devices. If one receiver merges both guitars into identical keyboard events, software cannot recover which guitar sent them.
 
-## Install on Linux
+## Platform status — 0.2.0-rc.1
 
-Extract the development Linux x86_64 archive and run **without sudo**:
+This is a **release candidate**, not a claim that every receiver and Windows security configuration has been validated.
+
+| Platform | Native implementation | Verification |
+| --- | --- | --- |
+| Linux x86_64 / CachyOS | evdev capture + uinput controllers | Owner reports successful physical guitar use. Automated mapping, GUI and installer tests. |
+| Windows x64 | Interception capture + ViGEmBus Xbox 360 controllers | Keyboard enumeration and two distinct XInput reports verified on a Windows 11 machine. Two-guitar gameplay, suppression and fresh-driver installation still need hardware acceptance testing. |
+
+Linux exposes an Xbox-layout uinput gamepad, not the Xbox USB protocol. Windows creates XInput-compatible Xbox 360 controllers. When streaming, the host's streaming software decides how to expose them to the game.
+
+## Install
+
+### Linux / CachyOS
+
+Download `ghvirtualgamepad-0.2.0-rc.1-linux-x86_64.tar.gz`, extract it, then run **without sudo**:
 
 ```bash
+cd ghvirtualgamepad
 bash install.sh
 ```
 
-Then open **GHVirtualGamePad** from the application menu. The installer adds the icon and shortcut, installs into your user data directory, and retains previous versions. Saved profiles are unchanged. `bash install.sh --dry-run` previews the destination without installing.
+Launch **GHVirtualGamePad** from your application menu. The bundle includes Python, Qt and the backend: no Rust compiler, pip downloads or virtual environment setup. The installer itself needs system Python 3.10+. Desktop OpenGL/EGL and X11/Wayland runtime libraries must be available. Built on Ubuntu 24.04; requires glibc 2.39 or newer, including current CachyOS. Not an Alpine/musl package.
 
-The current development bundle needs Python 3.10–3.14 and internet access during installation to download Qt into its private environment. Rust is not required. A separate frozen-bundle build is being prepared to include Python and Qt; it must be built and tested on Linux before distribution.
+- `bash install.sh --dry-run` previews installation.
+- Run `app/GHVirtualGamePad` directly for portable use.
+- If device access is denied, select the receiver and click **Enable device access**. Polkit authorization installs narrow udev access rules and enables uinput. The GUI never runs as root.
+- Replug the receiver after access setup if your desktop session has not applied the new ACL yet.
 
-Portable use remains available with `bash launch.sh`. Installation is a convenience, not a requirement for saving profiles or playing. There is no expiry or online activation.
+### Windows
 
-### First use
+Run `GHVirtualGamePad-0.2.0-rc.1-windows-x64-setup.exe`. It installs the application, icon, Start-menu shortcut and optional desktop shortcut. Python and Rust are **not required**.
 
-1. Put the guitar in keyboard mode and select its receiver for Player 1.
-2. If access is denied, click **Enable device access** and authorize the udev configuration through polkit.
-3. Click a fret, function name or binding field, then press and release its physical control. Unused functions can stay unassigned.
-4. Map whammy as a button. **Press (ms)** is its travel time to full deflection; **Return (ms)** is its return time.
-5. Repeat for Player 2 with the other receiver. One player also works alone.
-6. Click **Save profiles**, release all buttons, then **Start controllers**.
-7. Start Moonlight and map the controllers in the host game.
+The installer offers missing dependencies using bundled, SHA-256-pinned upstream payloads:
 
-Stop controllers before editing mappings. Closing the program releases captured devices. Ctrl+Esc stops them while the window has focus; it is not a global Wayland shortcut. Do not select your everyday keyboard or a receiver shared with your mouse. Capture applies to the selected receiver's interfaces.
+| Dependency | Purpose | Important limitation |
+| --- | --- | --- |
+| ViGEmBus 1.22.0 | Virtual Xbox 360 gamepads | [Retired upstream](https://docs.nefarius.at/projects/ViGEm/End-of-Life/); no ongoing driver updates. |
+| Interception 1.0.1 | Per-keyboard capture and suppression | System-wide keyboard/mouse filter driver; restart required. Upstream binary terms are for [non-commercial use](https://github.com/oblitum/Interception#license). |
 
-## Profiles and upgrades
+Save your work, approve UAC, and restart Windows if drivers were installed. Existing driver services are not reinstalled. To retry dependency setup, rerun the installer. The application runs without elevation.
 
-Profiles live outside the application folder in Qt's user configuration location. **Save profiles** displays the exact path. On Linux this is normally `$XDG_CONFIG_HOME/GHVirtualGamePad/GHVirtualGamePad`, defaulting to `~/.config/GHVirtualGamePad/GHVirtualGamePad`.
+**Do not disable Secure Boot, Memory Integrity or signature enforcement.** If policy blocks a driver, this backend is not compatible with that configuration. Interception upstream lists testing through Windows 10; Windows 11 compatibility depends on the machine. Anti-cheat software may reject input filter drivers. The application installer is not Authenticode-signed; verify its checksum and provenance rather than disabling protections.
 
-Back up `profiles.json` before upgrading. Simulation uses `demo-profiles.json`. The installer never deletes either file. Keep the working portable archive as a fallback. Moving a receiver to another USB port requires reselection and may require access setup again.
+Windows mappings are saved, but **receivers must be selected each session**: Interception slot numbers are not persistent USB identities. After unplugging/replugging, stop and reselect the receiver. All guitar buttons must appear on the selected keyboard slot; Windows multi-slot aggregation is not implemented.
 
-## Controller layout
+## First song in seven steps
 
-| Function | Virtual output |
+1. Put both guitars into **keyboard mode**. Both using hardware “Player 1” mode is fine if the OS sees separate devices.
+2. Select the first receiver for **Player 1**. Identify it by unplugging/replugging if necessary.
+3. Click a fret, function name or binding value. Press and release its physical control. Unused functions can remain blank.
+4. Map whammy as a button. **Press (ms)** controls travel to full deflection; **Return (ms)** controls spring-back.
+5. Switch to **Player 2**, choose the other receiver, and repeat. One guitar also works alone.
+6. Click **Save profiles**, release every physical control, then **Start controllers**.
+7. Launch/reconnect Moonlight **after** starting controllers, then bind both controllers in the game.
+
+Stop before editing. Close the app normally to release capture and virtual controllers. Ctrl+Esc stops them **while this window has focus**; it is not a global emergency shortcut. Never select your everyday keyboard or a receiver shared with a mouse. In preview mode, selected keyboard events still reach other apps: close chat/password fields while teaching bindings.
+
+## Virtual layout
+
+| Guitar function | Gamepad output |
 | --- | --- |
 | Green / Red / Yellow / Blue / Orange | A / B / Y / X / LB |
-| Strum up/down | D-pad up/down |
+| Strum up / down | D-pad up / down |
 | D-pad | D-pad |
 | Start / Select / Extra | Start / Back / RB |
 | Digital whammy | Right stick Y: neutral → positive full scale → neutral |
 
-## Development
+These are output defaults, not assumed physical key codes. Teach your receiver once, then map the resulting controller in the game. Whammy is a synthetic axis, not a measurement of physical lever position.
 
-Rust implements mapping, simulation and Linux evdev/uinput. Qt Quick/QML provides the GUI with a thin PySide6 shell. The GUI talks to its unprivileged Rust child over private pipes. There is no network listener or persistent root daemon.
+## Profiles, updates and removal
 
-Windows simulator: `./run.ps1`. Linux from source: `bash run.sh`.
+Your test build does not expire and already supports saving profiles. Installation adds a convenient launcher and managed location; it is not required to keep mappings.
+
+**Save profiles** shows the exact config path. Normally:
+
+- Linux: `~/.config/GHVirtualGamePad/GHVirtualGamePad/profiles.json` (respects `XDG_CONFIG_HOME`).
+- Windows: Qt's user-local config folder, normally `%LOCALAPPDATA%/GHVirtualGamePad/GHVirtualGamePad/windows-profiles.json`.
+- Demo: `demo-profiles.json`, separate from real input profiles.
+
+Back up this folder before upgrading. Linux and Windows physical key codes differ, so teach Windows bindings separately. Linux installation keeps previous versions; launch a retained version directly to roll back. Windows upgrades use the same application directory. Neither installer intentionally removes profiles.
+
+Windows uninstall leaves shared drivers because other applications may need them. Linux has no automatic uninstaller yet: application files, desktop entry, profiles and privileged access rules are separate. Do not remove rules needed by another installation.
+
+## Troubleshooting
+
+| Symptom | Check |
+| --- | --- |
+| Both guitars control Player 1 | Select two different receivers/slots, not the same device twice. |
+| No Linux inputs / cannot create pad | Use **Enable device access**, check polkit, replug the receiver. |
+| No Windows keyboards | Install Interception, reboot; confirm Windows did not block its driver. |
+| Windows cannot create controllers | Check ViGEmBus and free XInput slots; close other virtual-controller tools. XInput supports four slots. |
+| Moonlight does not see pads | Start controllers first, then restart/reconnect streaming. |
+| Keys still type in the game | Preview does not suppress input. Start controllers and verify device selection. |
+| Whammy behaves backward | Invert/rebind Right Y in the game. |
+| Pad remains after force-killing the app | Close normally whenever possible. If a Windows target remains, restart Windows. |
+
+**Diagnostics** saves device IDs and profiles, not keystroke history. Review IDs/USB serials before posting publicly. Include OS/driver versions, one/two-player results and reproduction steps in reports.
+
+## Development and verification
+
+Rust handles device access, mapping and virtual gamepads. Qt Quick/QML supplies the UI through a thin PySide6 shell. Communication uses private stdin/stdout pipes. No persistent root daemon or network listener is installed.
+
+- Linux: `bash run.sh`.
+- Windows: `./run.ps1`; `./run.ps1 -Demo` needs no drivers. Native development needs `drivers/interception.dll` beside the backend; `tools/prepare_windows.py` downloads its payload.
+- Native offline bundles: `tools/build_frozen.py` / `tools/build_windows.py`.
+- Windows installer: Inno Setup 6, `packaging/windows.iss`.
+- GitHub Actions builds installers on their native OS and checks install/upgrade. It does not install input-filter drivers on CI hosts.
 
 ```text
 cargo fmt --check
@@ -86,8 +145,12 @@ python -m unittest discover -s tests -v
 python gui/app.py --demo --smoke-test
 ```
 
-Python commands need the environment from `requirements.txt`. See [Polish technical documentation](docs/README.pl.md), [changes](CHANGELOG.md), [release gates](docs/RELEASING.md) and [dependency notices](THIRD_PARTY.md).
+Opt-in native Windows check: close games, then `python tools/check_windows.py target/debug/ghvirtualgamepad.exe`. It creates two temporary pads and reads distinct axis values through XInput, then enumerates keyboards **without capturing physical input**. It does not replace a two-guitar gameplay test.
+
+See [release verification](docs/RELEASING.md), [changelog](CHANGELOG.md) and [dependency notices/source information](THIRD_PARTY.md).
 
 ## License
 
-Original code and icon: [MIT](LICENSE). Dependencies retain their own licenses. Not affiliated with DOYO, Microsoft, Xbox, Guitar Hero or Moonlight.
+Original code and icon: **[MIT](LICENSE)**. Dependencies retain their terms. MIT does not grant commercial rights to Interception's driver assets. Qt is dynamically linked and replaceable; license texts are included in bundles.
+
+Not affiliated with DOYO, Microsoft, Xbox, Guitar Hero, Activision or Moonlight.

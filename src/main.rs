@@ -10,6 +10,12 @@ use std::{
 
 #[cfg(target_os = "linux")]
 mod linux;
+#[cfg(target_os = "linux")]
+use linux::Backend;
+#[cfg(target_os = "windows")]
+mod windows;
+#[cfg(target_os = "windows")]
+use windows::Backend;
 
 #[derive(Deserialize)]
 #[serde(tag = "op", rename_all = "snake_case")]
@@ -38,16 +44,24 @@ enum Command {
 fn send(value: Value) {
     let mut out = io::stdout().lock();
     if writeln!(out, "{value}").and_then(|_| out.flush()).is_err() {
-        std::process::exit(0);
+        panic!("Parent connection closed");
     }
 }
 
 fn main() {
     let demo = std::env::args().any(|a| a == "--demo");
-    #[cfg(not(target_os = "linux"))]
+    #[cfg(target_os = "windows")]
+    if std::env::args().any(|a| a == "--probe-gamepads") {
+        if let Err(message) = windows::probe() {
+            send(json!({"type":"error","message":message}));
+            std::process::exit(1);
+        }
+        return;
+    }
+    #[cfg(not(any(target_os = "linux", target_os = "windows")))]
     if !demo {
         send(
-            json!({"type":"error","message":"Native controller backend is Linux-only. Use --demo on Windows."}),
+            json!({"type":"error","message":"Native controllers require Linux or Windows. Use --demo on this platform."}),
         );
         return;
     }
@@ -71,25 +85,28 @@ fn main() {
     let mut maps = [Mapper::default(), Mapper::default()];
     let mut selected = [String::new(), String::new()];
     let mut running = false;
-    #[cfg(target_os = "linux")]
-    let mut backend = linux::Backend::default();
+    #[cfg(any(target_os = "linux", target_os = "windows"))]
+    let mut backend = Backend::default();
     send(json!({"type":"hello","protocol":1,"demo":demo}));
     let mut last = Instant::now();
     let mut publish = Instant::now();
     let mut scan = Instant::now() - Duration::from_secs(3);
-    loop {
+    'engine: loop {
         for _ in 0..64 {
             let Ok(command) = rx.try_recv() else {
                 break;
             };
+            if matches!(&command, Ok(Command::Quit)) {
+                break 'engine;
+            }
             let result: Result<(), String> = (|| {
                 let command = command?;
                 match command {
-                    Command::Quit => std::process::exit(0),
+                    Command::Quit => unreachable!(),
                     Command::Scan => scan = Instant::now() - Duration::from_secs(3),
                     Command::Stop => {
                         running = false;
-                        #[cfg(target_os = "linux")]
+                        #[cfg(any(target_os = "linux", target_os = "windows"))]
                         backend.stop();
                         for m in &mut maps {
                             m.reset();
@@ -102,7 +119,7 @@ fn main() {
                         if !device.is_empty() && selected[1 - player] == device {
                             return Err("Device is already assigned to the other player".into());
                         }
-                        #[cfg(target_os = "linux")]
+                        #[cfg(any(target_os = "linux", target_os = "windows"))]
                         if !demo {
                             backend.select(player, &device)?;
                         }
@@ -135,7 +152,7 @@ fn main() {
                                 return Err(format!("Player {} has no bindings", p + 1));
                             }
                         }
-                        #[cfg(target_os = "linux")]
+                        #[cfg(any(target_os = "linux", target_os = "windows"))]
                         if !demo {
                             backend.start(&maps)?;
                         }
@@ -172,14 +189,14 @@ fn main() {
         let now = Instant::now();
         let elapsed = now.duration_since(last).as_secs_f64().min(0.1);
         last = now;
-        #[cfg(target_os = "linux")]
+        #[cfg(any(target_os = "linux", target_os = "windows"))]
         if !demo {
             backend.poll(&mut maps);
         }
         for m in &mut maps {
             m.tick(elapsed);
         }
-        #[cfg(target_os = "linux")]
+        #[cfg(any(target_os = "linux", target_os = "windows"))]
         if running && !demo {
             if let Err(e) = backend.emit(&maps) {
                 backend.stop();
@@ -198,7 +215,7 @@ fn main() {
                     json!({"type":"devices","devices":[{"id":"demo-1","label":"Simulated keyboard A · USB port 1","sources":["keyboard"]},{"id":"demo-2","label":"Simulated keyboard B · USB port 2","sources":["keyboard"]}]}),
                 );
             }
-            #[cfg(target_os = "linux")]
+            #[cfg(any(target_os = "linux", target_os = "windows"))]
             if !demo {
                 backend.refresh();
                 send(json!({"type":"devices","devices":backend.list()}));

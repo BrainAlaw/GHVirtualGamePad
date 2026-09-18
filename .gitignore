@@ -11,4 +11,5 @@ build/
 .env.*
 profiles.json
 demo-profiles.json
+windows-profiles.json
 diagnostics.json

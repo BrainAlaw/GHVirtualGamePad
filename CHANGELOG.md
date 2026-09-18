@@ -1,11 +1,22 @@
 # Changes
 
+## 0.2.0-rc.1
+
+- Native Windows per-keyboard input through Interception and two Xbox 360 outputs through ViGEmBus.
+- Real XInput two-pad diagnostic and keyboard-enumeration check without capturing physical input.
+- Bounded initial report retry during Windows device enumeration; normal backend exit releases native resources.
+- Separate Windows profiles and explicit receiver reselection to avoid trusting persistent driver slots.
+- Windows offline installer with icon, shortcuts, optional missing-driver installation and reboot notice. Profiles/shared drivers are retained on removal.
+- Linux offline Python/Qt installer with menu integration, retained versions and automated upgrades.
+- Dependency notices, source/relinking information, bilingual documentation and UI preview.
+- Windows physical two-guitar and clean driver-install acceptance remain required before stable release.
+
 ## Installation and publication preparation
 
 - Added an original SVG icon and desktop application identity.
 - Added a per-user Linux installer with menu integration, dry-run preview and retained versions. Profile paths remain unchanged.
 - Added MIT licensing and an English project overview with accurate platform support status.
-- Full native Windows support remains a prerequisite for the public binary release; Windows currently runs only the simulator.
+- At that development stage Windows was simulator-only; native support was added in 0.2.0-rc.1 above.
 
 ## Mapping UI fix
 

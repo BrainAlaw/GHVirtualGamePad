@@ -58,6 +58,9 @@ class Bridge(QObject):
     def __init__(self, demo, executable, config_dir=None):
         super().__init__()
         self.demo = demo
+        self.backend_ready = False
+        self.backend_state_received = False
+        self.backend_failed = False
         self.devices_data = [{"id": "", "label": "Select an input device…", "sources": []}]
         self.selected = ["", ""]
         self.choices = ["", ""]
@@ -74,13 +77,15 @@ class Bridge(QObject):
         self.held = {}
         self.setup_process = None
         self.config_dir = Path(config_dir) if config_dir else Path(QStandardPaths.writableLocation(QStandardPaths.AppConfigLocation))
-        self.profile_path = self.config_dir / ("demo-profiles.json" if demo else "profiles.json")
+        self.profile_path = self.config_dir / ("demo-profiles.json" if demo else ("windows-profiles.json" if sys.platform == "win32" else "profiles.json"))
         self.load_error = None
         try:
             if self.profile_path.exists():
                 data = validate_config(json.loads(self.profile_path.read_text(encoding="utf-8")))
                 self.profiles = data["profiles"]
                 self.remembered = data["selected"]
+                # Interception slots are not stable USB identities. Require selection each session.
+                if not demo and sys.platform == "win32": self.remembered = ["", ""]
         except (OSError, ValueError, KeyError, TypeError) as error:
             self.load_error = f"Cannot load saved profile: {error}. Original file was preserved."
         self.process = QProcess(self)
@@ -95,6 +100,8 @@ class Bridge(QObject):
 
     @Property(bool, constant=True)
     def demoMode(self): return self.demo
+    @Property(bool, constant=True)
+    def windowsMode(self): return sys.platform == "win32" and not self.demo
     @Property("QVariantList", notify=changed)
     def devices(self): return self.devices_data
     @Property(int, notify=changed)
@@ -144,6 +151,7 @@ class Bridge(QObject):
     def handle(self, event):
         kind = event["type"]
         if kind == "hello":
+            self.backend_ready = True
             for player in range(2): self.sync_profile(player)
             self.message = self.load_error or ("Simulation · no system gamepads are created" if self.demo else "Choose a receiver, then click a control to map it")
         elif kind == "devices":
@@ -158,13 +166,17 @@ class Bridge(QObject):
             self.running = event["running"]
             self.selected = event["selected"]
         elif kind == "state":
+            self.backend_state_received = True
             self.states = event["players"]
             self.stateChanged.emit()
             return
-        elif kind == "error": self.message = event["message"]
+        elif kind == "error":
+            self.backend_failed = True
+            self.message = event["message"]
         elif kind == "connection":
             self.connected[event["player"]] = event["connected"]
-            self.message = f"Player {event['player']+1}: {'reconnected' if event['connected'] else 'disconnected; waiting for the same USB port'}"
+            disconnected = "disconnected; stop and select the receiver again" if self.windowsMode else "disconnected; waiting for the same USB port"
+            self.message = f"Player {event['player']+1}: {'reconnected' if event['connected'] else disconnected}"
         elif kind == "input":
             # Never retain arbitrary keyboard events outside an explicit mapping session.
             if self.learning and event["player"] == self.active:
@@ -328,7 +340,7 @@ class Bridge(QObject):
     def shutdown(self):
         if self.process.state() != QProcess.NotRunning:
             self.send("quit")
-            if not self.process.waitForFinished(2000):
+            if not self.process.waitForFinished(15000):
                 self.process.kill(); self.process.waitForFinished(1000)
 
 
@@ -348,7 +360,7 @@ def main():
     binary_name = "ghvirtualgamepad.exe" if sys.platform == "win32" else "ghvirtualgamepad"
     bundled = ROOT / "bin" / binary_name
     executable = args.backend or (bundled if bundled.exists() else ROOT / "target" / "debug" / binary_name)
-    demo = args.demo or sys.platform != "linux"
+    demo = args.demo or sys.platform not in ("linux", "win32")
     bridge = Bridge(demo, executable, args.config_dir)
     engine = QQmlApplicationEngine()
     engine.rootContext().setContextProperty("bridge", bridge)
@@ -356,7 +368,8 @@ def main():
     if not engine.rootObjects():
         bridge.shutdown(); return 1
     app.aboutToQuit.connect(bridge.shutdown)
-    if args.smoke_test: QTimer.singleShot(1500, app.quit)
+    if args.smoke_test:
+        QTimer.singleShot(1500, lambda: app.exit(0 if bridge.backend_ready and bridge.backend_state_received and not bridge.backend_failed and bridge.process.state() == QProcess.Running else 1))
     return app.exec()
 
 
