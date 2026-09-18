@@ -1,0 +1,14 @@
+.venv/
+.tools/
+target/
+__pycache__/
+*.pyc
+artifacts/
+dist/
+build/
+*.spec
+.env
+.env.*
+profiles.json
+demo-profiles.json
+diagnostics.json
