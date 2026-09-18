@@ -4,7 +4,7 @@ MIT covers GHVirtualGamePad's original code and icon only. Binary bundles includ
 
 ## Qt / PySide6 / Shiboken6 6.10.2
 
-The application uses the LGPLv3 options of Qt/PySide6 and dynamically loads their unmodified shared libraries. LGPLv3 and GPLv3 texts are included from upstream wheels. No commercial Qt license is claimed.
+The application uses the LGPLv3 options of Qt/PySide6 and dynamically loads their unmodified shared libraries. LGPLv3/GPLv3 texts and embedded third-party notices are collected from the matching upstream sources, because some wheels contain only a commercial-license placeholder. Unused QML add-ons, debug plugins and the Qt virtual keyboard are excluded. No commercial Qt license is claimed.
 
 Corresponding unmodified source, upstream notices and build instructions:
 

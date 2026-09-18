@@ -1,6 +1,7 @@
 """Collect installed distribution and locked Rust dependency license notices."""
 import importlib.metadata
 import json
+import platform
 from pathlib import Path
 import shutil
 import subprocess
@@ -15,6 +16,20 @@ def collect(destination):
     destination.mkdir(parents=True, exist_ok=True)
     metadata = json.loads(subprocess.check_output(["cargo", "metadata", "--locked", "--format-version", "1"], cwd=ROOT))
     inventory = []
+    rust_version = subprocess.check_output(["rustc", "--version"], text=True).strip()
+    inventory.append({"name": "Rust toolchain", "version": rust_version})
+    inventory.append({"name": "Python", "version": platform.python_version()})
+    rust_root = Path(subprocess.check_output(["rustc", "--print", "sysroot"], text=True).strip())
+    rust_notices = rust_root / "share/doc/rust/licenses"
+    if rust_notices.is_dir():
+        shutil.copytree(rust_notices, destination / "rust-toolchain", dirs_exist_ok=True)
+    else:
+        for name in ("MIT.txt", "Apache-2.0.txt"):
+            url = f'https://raw.githubusercontent.com/rust-lang/rust/{rust_version.split()[1]}/LICENSES/{name}'
+            target = destination / "rust-toolchain" / name
+            target.parent.mkdir(parents=True, exist_ok=True)
+            with urllib.request.urlopen(url, timeout=60) as response:
+                target.write_bytes(response.read())
     # Wheels can contain only the commercial-license placeholder. Collect the actual
     # open-source terms and embedded third-party notices from the matching Qt sources.
     for repository in ("qtbase", "qtdeclarative", "qtsvg", "pyside-setup"):
@@ -58,6 +73,10 @@ def collect(destination):
     for source in (Path(sys.base_prefix) / "LICENSE.txt", Path(sys.base_prefix) / "lib" / f"python{sys.version_info.major}.{sys.version_info.minor}" / "LICENSE.txt"):
         if source.is_file():
             shutil.copy2(source, destination / "Python-LICENSE.txt")
+    if not (destination / "Python-LICENSE.txt").exists():
+        url = f"https://raw.githubusercontent.com/python/cpython/v{platform.python_version()}/LICENSE"
+        with urllib.request.urlopen(url, timeout=60) as response:
+            (destination / "Python-LICENSE.txt").write_bytes(response.read())
     (destination / "inventory.json").write_text(json.dumps(inventory, indent=2), encoding="utf-8")
     shutil.copy2(ROOT / "THIRD_PARTY.md", destination / "README.md")
 

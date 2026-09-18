@@ -2,6 +2,7 @@
 from PyInstaller.utils.hooks.qt import add_qt6_dependencies, pyside6_library_info
 
 hiddenimports, binaries, datas = add_qt6_dependencies(__file__)
+binaries = [item for item in binaries if "/qmltooling/" not in item[0].replace("\\", "/")]
 qml_binaries, qml_datas = pyside6_library_info.collect_qtqml_files()
 
 
