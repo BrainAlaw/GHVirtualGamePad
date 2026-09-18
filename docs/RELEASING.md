@@ -23,6 +23,8 @@ Authenticate CLI interactively; do not store tokens here or in chat. Source may 
 
 The installer retains version directories and switches a stable `current` symlink after dependency installation and a GUI smoke check. It never deletes profiles or udev rules. Retained versions can be started directly from their release directory. Automated removal is not enabled.
 
+`tools/build_frozen.py` and the manual **Build Linux installer** workflow prepare a native Linux directory bundle with Python and Qt, test installation and upgrade, and upload a development artifact. They do not publish a Release. Binary redistribution notices and hardware acceptance gates remain applicable.
+
 ## Windows dependency findings
 
 - Raw Input distinguishes physical keyboards, but `RIDEV_NOLEGACY` only affects the registering application's messages: https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-rawinputdevice
