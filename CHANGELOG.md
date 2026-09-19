@@ -1,5 +1,12 @@
 # Changes
 
+## 0.2.0-rc.2
+
+- Added an optional, per-player **GHWT:DE Extra fix** beside the Extra binding.
+- When enabled, Extra / guitar tilt outputs D-pad Left instead of RB so GHWT:DE can bind it.
+- Existing profiles migrate with the compatibility option disabled; other games retain the normal RB output.
+- Documented local play as the default workflow and Moonlight/VDI as optional.
+
 ## 0.2.0-rc.1
 
 - Native Windows per-keyboard input through Interception and two Xbox 360 outputs through ViGEmBus.

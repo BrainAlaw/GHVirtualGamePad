@@ -24,6 +24,13 @@ class Profiles(unittest.TestCase):
             data["profiles"][0]["rise_ms"] = 0
             with self.assertRaises(ValueError): validate_config(data)
 
+    def test_old_profile_adds_disabled_extra_fix(self):
+        data = {"version": 1, "profiles": [
+            {"bindings": {}, "rise_ms": 250.0, "return_ms": 180.0},
+            {"bindings": {}, "rise_ms": 250.0, "return_ms": 180.0}], "selected": ["", ""]}
+        validated = validate_config(data)
+        self.assertFalse(validated["profiles"][0]["ghwtde_extra_fix"])
+
 
 class Protocol(unittest.TestCase):
     def setUp(self):

@@ -34,7 +34,7 @@ class Gui(unittest.TestCase):
     def click(self, window, name):
         item = self.find_item(window, name)
         self.assertIsNotNone(item, name)
-        if name.startswith(("mapping-", "binding-", "clear-")):
+        if name.startswith(("mapping-", "binding-", "clear-", "ghwtde-extra-fix")):
             scroll = self.find_item(window, "mappingScroll")
             viewport = scroll.property("contentItem")
             center = item.mapToScene(QPointF(item.width()/2, item.height()/2))
@@ -87,6 +87,8 @@ class Gui(unittest.TestCase):
                 self.click(window, "clear-green")
                 self.assertNotIn("green", bridge.profiles[0]["bindings"])
                 bridge.demoDefaults()
+                self.click(window, "ghwtde-extra-fix")
+                self.wait(lambda: bridge.profiles[0]["ghwtde_extra_fix"])
                 first_profile = json.loads(json.dumps(bridge.profiles[0]))
                 bridge.setPlayer(1)
                 bridge.selectDevice(2)
@@ -112,6 +114,7 @@ class Gui(unittest.TestCase):
                 bridge.save()
                 data = json.loads(bridge.profile_path.read_text())
                 self.assertEqual(data["profiles"][0]["bindings"]["green"]["code"], 30)
+                self.assertTrue(data["profiles"][0]["ghwtde_extra_fix"])
                 bridge.exportReport()
                 report = json.loads((Path(folder) / "diagnostics.json").read_text())
                 self.assertNotIn("recent", report)
@@ -126,6 +129,7 @@ class Gui(unittest.TestCase):
             restored = Bridge(True, executable, folder)
             try:
                 self.assertEqual(restored.profiles[0]["bindings"]["green"]["code"], 30)
+                self.assertTrue(restored.profiles[0]["ghwtde_extra_fix"])
                 self.wait(lambda: restored.selected[0] == "demo-1")
             finally: restored.shutdown()
 

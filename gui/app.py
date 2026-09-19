@@ -17,13 +17,16 @@ DEMO_KEYS = {Qt.Key_A: 30, Qt.Key_S: 31, Qt.Key_D: 32, Qt.Key_F: 33, Qt.Key_G: 3
 
 
 def default_profile():
-    return {"bindings": {}, "rise_ms": 250.0, "return_ms": 180.0}
+    return {"bindings": {}, "rise_ms": 250.0, "return_ms": 180.0, "ghwtde_extra_fix": False}
 
 
 def validate_config(data):
     if data.get("version") != 1 or len(data.get("profiles", [])) != 2 or len(data.get("selected", [])) != 2:
         raise ValueError("Unsupported profile file")
     for profile in data["profiles"]:
+        profile.setdefault("ghwtde_extra_fix", False)
+        if not isinstance(profile["ghwtde_extra_fix"], bool):
+            raise ValueError("Invalid GHWT:DE Extra fix setting")
         for key in ("rise_ms", "return_ms"):
             if not isinstance(profile[key], (int, float)) or not 10 <= profile[key] <= 10000:
                 raise ValueError("Invalid whammy timing")
@@ -124,6 +127,8 @@ class Bridge(QObject):
     def riseMs(self): return self.profiles[self.active]["rise_ms"]
     @Property(float, notify=changed)
     def returnMs(self): return self.profiles[self.active]["return_ms"]
+    @Property(bool, notify=changed)
+    def ghwtdeExtraFix(self): return self.profiles[self.active]["ghwtde_extra_fix"]
 
     def error(self, message):
         self.message = message
@@ -249,6 +254,12 @@ class Bridge(QObject):
         if self.running: return
         self.profiles[self.active]["rise_ms"] = max(10, min(10000, rise))
         self.profiles[self.active]["return_ms"] = max(10, min(10000, fall))
+        self.sync_profile(self.active); self.changed.emit()
+
+    @Slot(bool)
+    def setGhwtdeExtraFix(self, enabled):
+        if self.running: return
+        self.profiles[self.active]["ghwtde_extra_fix"] = enabled
         self.sync_profile(self.active); self.changed.emit()
 
     @Slot()

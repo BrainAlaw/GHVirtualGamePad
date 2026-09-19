@@ -298,7 +298,11 @@ impl Backend {
                 ("start", 315),
             ]
             .iter()
-            .map(|(action, code)| (1, *code, map.pressed(action) as i32))
+            .map(|(action, code)| {
+                let pressed =
+                    map.pressed(action) && (*action != "extra" || !map.profile.ghwtde_extra_fix);
+                (1, *code, pressed as i32)
+            })
             .collect();
             let (x, y) = map.hat();
             state.extend([

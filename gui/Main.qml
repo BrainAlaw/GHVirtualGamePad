@@ -168,7 +168,7 @@ ApplicationWindow {
                                 Button {
                                     objectName: "mapping-" + mappingRow.functionId
                                     Layout.preferredWidth: 180; Layout.preferredHeight: 29
-                                    text: window.labels[index]
+                                    text: mappingRow.functionId === "extra" && bridge.ghwtdeExtraFix ? "Extra → D-pad ←" : window.labels[index]
                                     highlighted: bridge.learningAction === mappingRow.functionId || !!bridge.pad.buttons[mappingRow.functionId]
                                     enabled: !bridge.isRunning
                                     onClicked: window.beginMapping(mappingRow.functionId)
@@ -180,6 +180,17 @@ ApplicationWindow {
                                     enabled: !bridge.isRunning
                                     text: bridge.bindings[mappingRow.functionId] ? ((bridge.bindings[mappingRow.functionId].kind === 1 ? "KEY " : "AXIS ") + bridge.bindings[mappingRow.functionId].code) : "Not mapped — click to assign"
                                     onClicked: window.beginMapping(mappingRow.functionId)
+                                }
+                                CheckBox {
+                                    objectName: mappingRow.functionId === "extra" ? "ghwtde-extra-fix" : ""
+                                    visible: mappingRow.functionId === "extra"
+                                    enabled: !bridge.isRunning
+                                    text: "GHWT:DE fix  ⓘ"
+                                    checked: bridge.ghwtdeExtraFix
+                                    onClicked: bridge.setGhwtdeExtraFix(checked)
+                                    ToolTip.visible: hovered
+                                    ToolTip.delay: 300
+                                    ToolTip.text: "Makes Extra / guitar tilt output D-pad Left instead of RB.\nEnable this when GHWT:DE cannot bind Extra to a dedicated button."
                                 }
                                 ToolButton { objectName: "clear-" + mappingRow.functionId; text: "×"; enabled: !bridge.isRunning; onClicked: bridge.clearBinding(mappingRow.functionId) }
                             }

@@ -1,6 +1,6 @@
 # Release verification
 
-## 0.2.0-rc.1 scope
+## 0.2.0-rc.2 scope
 
 Native Linux and Windows backends are implemented. Do not describe demo tests as physical-device acceptance. Until the Windows two-guitar checklist passes, publish only a labelled **pre-release**.
 
@@ -31,7 +31,7 @@ System-wide input filters are not installed on CI. Local native tests used alrea
 
 ## Publishing
 
-Run both installer workflows against the same commit after **Check** succeeds. Download artifacts, calculate SHA-256, and attach Linux tarball, Windows setup EXE and `SHA256SUMS.txt` to `v0.2.0-rc.1` at that exact commit. Do not substitute binaries from another commit.
+Run both installer workflows against the same commit after **Check** succeeds. Download artifacts, calculate SHA-256, and attach Linux tarball, Windows setup EXE and `SHA256SUMS.txt` to `v0.2.0-rc.2` at that exact commit. Do not substitute binaries from another commit.
 
 Driver hashes/URLs: `tools/prepare_windows.py`. Notices and source/relinking instructions: `THIRD_PARTY.md`. Windows includes matching Interception library source and upstream terms.
 

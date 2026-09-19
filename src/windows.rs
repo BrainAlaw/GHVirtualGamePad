@@ -313,7 +313,7 @@ fn report(map: &Mapper) -> XGamepad {
         ("start", XButtons::START),
         ("select", XButtons::BACK),
     ] {
-        if map.pressed(action) {
+        if map.pressed(action) && (action != "extra" || !map.profile.ghwtde_extra_fix) {
             buttons |= flag;
         }
     }
@@ -413,10 +413,23 @@ mod tests {
     fn output_layout_and_axis() {
         let mut map = Mapper::default();
         map.state.buttons.insert("green".into(), true);
+        map.state.buttons.insert("extra".into(), true);
         map.state.buttons.insert("strum_down".into(), true);
         map.state.whammy = 1.0;
         let output = report(&map);
-        assert_eq!(output.buttons.raw, XButtons::A | XButtons::DOWN);
+        assert_eq!(
+            output.buttons.raw,
+            XButtons::A | XButtons::RB | XButtons::DOWN
+        );
         assert_eq!(output.thumb_ry, 32767);
+    }
+
+    #[test]
+    fn ghwtde_fix_outputs_extra_as_dpad_left_only() {
+        let mut map = Mapper::default();
+        map.profile.ghwtde_extra_fix = true;
+        map.state.buttons.insert("extra".into(), true);
+        let output = report(&map);
+        assert_eq!(output.buttons.raw, XButtons::LEFT);
     }
 }

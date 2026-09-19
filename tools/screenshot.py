@@ -28,12 +28,14 @@ with tempfile.TemporaryDirectory(prefix="ghvp-screenshot-") as config:
             bridge.selectDevice(player + 1)
             bridge.demoDefaults()
         bridge.setPlayer(0)
+        bridge.setGhwtdeExtraFix(True)
         bridge.error("Ready to play. Independent mappings for Player 1 and Player 2.")
+        engine.rootObjects()[0].setHeight(1000)
     def capture():
         if not engine.rootObjects()[0].grabWindow().save(str(ROOT / "docs/screenshot.png")):
             raise RuntimeError("Screenshot failed")
         application.quit()
     QTimer.singleShot(500, setup)
-    QTimer.singleShot(1000, capture)
+    QTimer.singleShot(1200, capture)
     application.aboutToQuit.connect(bridge.shutdown)
     application.exec()

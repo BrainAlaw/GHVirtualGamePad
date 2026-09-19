@@ -27,7 +27,7 @@ Built for DOYO guitars and games such as **Guitar Hero World Tour: Definitive Ed
 
 You need distinguishable input devices. If one receiver merges both guitars into identical keyboard events, software cannot recover which guitar sent them.
 
-## Platform status — 0.2.0-rc.1
+## Platform status — 0.2.0-rc.2
 
 This is a **release candidate**, not a claim that every receiver and Windows security configuration has been validated.
 
@@ -42,7 +42,7 @@ Linux exposes an Xbox-layout uinput gamepad, not the Xbox USB protocol. Windows 
 
 ### Linux / CachyOS
 
-Download `ghvirtualgamepad-0.2.0-rc.1-linux-x86_64.tar.gz`, extract it, then run **without sudo**:
+Download `ghvirtualgamepad-0.2.0-rc.2-linux-x86_64.tar.gz`, extract it, then run **without sudo**:
 
 ```bash
 cd ghvirtualgamepad
@@ -58,7 +58,7 @@ Launch **GHVirtualGamePad** from your application menu. The bundle includes Pyth
 
 ### Windows
 
-Run `GHVirtualGamePad-0.2.0-rc.1-windows-x64-setup.exe`. It installs the application, icon, Start-menu shortcut and optional desktop shortcut. Python and Rust are **not required**.
+Run `GHVirtualGamePad-0.2.0-rc.2-windows-x64-setup.exe`. It installs the application, icon, Start-menu shortcut and optional desktop shortcut. Python and Rust are **not required**.
 
 The installer offers missing dependencies using bundled, SHA-256-pinned upstream payloads:
 
@@ -79,6 +79,7 @@ Windows mappings are saved, but **receivers must be selected each session**: Int
 2. Select the first receiver for **Player 1**. Identify it by unplugging/replugging if necessary.
 3. Click a fret, function name or binding value. Press and release its physical control. Unused functions can remain blank.
 4. Map whammy as a button. **Press (ms)** controls travel to full deflection; **Return (ms)** controls spring-back.
+   For GHWT:DE, enable **GHWT:DE fix** beside Extra if the game only accepts that action from a D-pad direction. Extra will output D-pad Left instead of RB for that player.
 5. Switch to **Player 2**, choose the other receiver, and repeat. One guitar also works alone.
 6. Click **Save profiles**, release every physical control, then **Start controllers**. Launch the local game and bind both controllers. If you use Moonlight or another streaming solution, connect it after starting the controllers.
 
@@ -91,7 +92,8 @@ Stop before editing. Close the app normally to release capture and virtual contr
 | Green / Red / Yellow / Blue / Orange | A / B / Y / X / LB |
 | Strum up / down | D-pad up / down |
 | D-pad | D-pad |
-| Start / Select / Extra | Start / Back / RB |
+| Start / Select | Start / Back |
+| Extra | RB, or D-pad Left with the optional GHWT:DE fix |
 | Digital whammy | Right stick Y: neutral → positive full scale → neutral |
 
 These are output defaults, not assumed physical key codes. Teach your receiver once, then map the resulting controller in the game. Whammy is a synthetic axis, not a measurement of physical lever position.

@@ -6,7 +6,7 @@ Dwie gitary USB działające jako klawiatury → dwa niezależne wirtualne pady.
 
 ## Status
 
-0.2.0-rc.1 to kandydat do wydania stabilnego. Linux został sprawdzony przez właściciela na fizycznych gitarach. Windows ma rzeczywisty backend: sprawdzono wykrywanie klawiatur i dwa niezależne odczyty XInput. Pełny test dwóch gitar, blokowania oryginalnych klawiszy i gry na Windowsie pozostaje do wykonania.
+0.2.0-rc.2 to kandydat do wydania stabilnego. Linux został sprawdzony przez właściciela na fizycznych gitarach. Windows ma rzeczywisty backend: sprawdzono wykrywanie klawiatur i dwa niezależne odczyty XInput. Pełny test dwóch gitar, blokowania oryginalnych klawiszy i gry na Windowsie pozostaje do wykonania.
 
 ## Linux / CachyOS
 
@@ -36,6 +36,7 @@ Mapowania są zapisywane, ale na Windowsie odbiorniki trzeba wybrać przy każdy
 2. Wybierz odbiornik gracza 1. Na Linuxie w razie braku dostępu użyj **Enable device access**, zatwierdź polkit; w razie potrzeby podłącz odbiornik ponownie.
 3. Kliknij element gitary, nazwę funkcji lub pole mapowania. Naciśnij i puść przycisk. Niepotrzebne funkcje mogą być puste.
 4. Whammy przypisz jak przycisk. **Press (ms)** to czas wychylenia, **Return (ms)** — powrotu osi.
+   Dla GHWT:DE zaznacz **GHWT:DE fix** obok Extra, jeżeli gra pozwala przypisać tę funkcję tylko do D-pada. Extra będzie wtedy wysyłać D-pad Left zamiast RB, osobno dla wybranego gracza.
 5. Powtórz dla gracza 2 z drugim odbiornikiem. Jedna gitara też działa.
 6. **Save profiles**, puść wszystkie przyciski, następnie **Start controllers**. Uruchom grę lokalnie i przypisz kontrolery. Jeżeli korzystasz z Moonlight lub innego streamingu, połącz go dopiero po uruchomieniu kontrolerów.
 

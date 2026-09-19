@@ -25,7 +25,7 @@ jobs:
         run: |
           set -euo pipefail
           trial_dir=$(mktemp -d)
-          tar -xzf artifacts/ghvirtualgamepad-0.2.0-rc.1-linux-x86_64.tar.gz -C "$trial_dir"
+          tar -xzf artifacts/ghvirtualgamepad-0.2.0-rc.2-linux-x86_64.tar.gz -C "$trial_dir"
           export XDG_DATA_HOME="$trial_dir/user-data"
           export XDG_CONFIG_HOME="$trial_dir/user-config"
           bash "$trial_dir/ghvirtualgamepad/install.sh" --dry-run
@@ -38,6 +38,6 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: linux-installer
-          path: artifacts/ghvirtualgamepad-0.2.0-rc.1-linux-x86_64.tar.gz
+          path: artifacts/ghvirtualgamepad-0.2.0-rc.2-linux-x86_64.tar.gz
           if-no-files-found: error
           retention-days: 30

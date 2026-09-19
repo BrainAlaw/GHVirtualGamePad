@@ -33,6 +33,8 @@ pub struct Profile {
     pub bindings: BTreeMap<String, Binding>,
     pub rise_ms: f64,
     pub return_ms: f64,
+    #[serde(default)]
+    pub ghwtde_extra_fix: bool,
 }
 
 impl Default for Profile {
@@ -41,6 +43,7 @@ impl Default for Profile {
             bindings: BTreeMap::new(),
             rise_ms: 250.0,
             return_ms: 180.0,
+            ghwtde_extra_fix: false,
         }
     }
 }
@@ -136,7 +139,9 @@ impl Mapper {
     }
     pub fn hat(&self) -> (i32, i32) {
         (
-            self.pressed("right") as i32 - self.pressed("left") as i32,
+            self.pressed("right") as i32
+                - (self.pressed("left") || (self.profile.ghwtde_extra_fix && self.pressed("extra")))
+                    as i32,
             (self.pressed("down") || self.pressed("strum_down")) as i32
                 - (self.pressed("up") || self.pressed("strum_up")) as i32,
         )
@@ -217,5 +222,23 @@ mod tests {
             ..Profile::default()
         };
         assert!(p.validate().is_err());
+    }
+
+    #[test]
+    fn ghwtde_fix_routes_extra_to_dpad_left() {
+        let mut m = mapper("extra", 1);
+        m.profile.ghwtde_extra_fix = true;
+        m.input("keyboard", 1, 30, 1);
+        assert!(m.pressed("extra"));
+        assert_eq!(m.hat(), (-1, 0));
+        m.state.buttons.insert("right".into(), true);
+        assert_eq!(m.hat(), (0, 0));
+    }
+
+    #[test]
+    fn old_profile_defaults_extra_fix_to_disabled() {
+        let profile: Profile =
+            serde_json::from_str(r#"{"bindings":{},"rise_ms":250.0,"return_ms":180.0}"#).unwrap();
+        assert!(!profile.ghwtde_extra_fix);
     }
 }
