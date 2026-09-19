@@ -23,7 +23,7 @@ def build():
         "--add-data", str(ROOT / "tools/setup_linux.py") + ":tools",
         "--add-binary", str(ROOT / "target/release/ghvirtualgamepad") + ":bin",
         str(ROOT / "gui/app.py")], cwd=ROOT, check=True)
-    destination = ROOT / "artifacts/ghvirtualgamepad-0.2.0-rc.2-linux-x86_64.tar.gz"
+    destination = ROOT / "artifacts/ghvirtualgamepad-0.2.0-linux-x86_64.tar.gz"
     with tarfile.open(destination, "w:gz") as archive:
         archive.add(ROOT / "artifacts/frozen/GHVirtualGamePad", arcname="ghvirtualgamepad/app")
         for relative in ["assets", "docs", "tools/install_linux.py", "LICENSE", "README.md", "THIRD_PARTY.md", "CHANGELOG.md"]:

@@ -8,4 +8,4 @@ ViGEmBus is retired upstream. Interception is legacy software, tested upstream t
 
 The application's source code is MIT. Interception's library is LGPL; its upstream binary redistribution terms are for NON-COMMERCIAL use. Commercial use requires a separate upstream license. Bundled license texts and the matching client-library source are in _internal/notices/Interception.
 
-Driver installation is optional: uncheck the tasks to use existing dependencies or simulation mode. Uninstalling GHVirtualGamePad does NOT remove shared drivers or saved profiles. Windows hardware acceptance testing is still required for this release candidate.
+Driver installation is optional: uncheck the tasks to use existing dependencies or simulation mode. Uninstalling GHVirtualGamePad does NOT remove shared drivers or saved profiles. Two-guitar gameplay has been owner-tested on Windows; clean driver installation still depends on the machine's security policy.

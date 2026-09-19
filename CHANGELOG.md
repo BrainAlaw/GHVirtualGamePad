@@ -1,5 +1,11 @@
 # Changes
 
+## 0.2.0
+
+- Promoted the cross-platform release to stable after owner-confirmed physical two-guitar operation on Windows.
+- Confirmed the optional GHWT:DE Extra → D-pad Left compatibility mode in real use.
+- Retains all Linux/Windows functionality, installers and profile migration from the release candidates.
+
 ## 0.2.0-rc.2
 
 - Added an optional, per-player **GHWT:DE Extra fix** beside the Extra binding.

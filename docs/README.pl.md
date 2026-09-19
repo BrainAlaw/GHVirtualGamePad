@@ -6,7 +6,7 @@ Dwie gitary USB działające jako klawiatury → dwa niezależne wirtualne pady.
 
 ## Status
 
-0.2.0-rc.2 to kandydat do wydania stabilnego. Linux został sprawdzony przez właściciela na fizycznych gitarach. Windows ma rzeczywisty backend: sprawdzono wykrywanie klawiatur i dwa niezależne odczyty XInput. Pełny test dwóch gitar, blokowania oryginalnych klawiszy i gry na Windowsie pozostaje do wykonania.
+0.2.0 to pierwsze stabilne wydanie. Linux i Windows zostały sprawdzone przez właściciela na fizycznych gitarach; na Windowsie potwierdzono rozdzielenie dwóch gitar, grę oraz poprawkę Extra dla GHWT:DE. Dodatkowo przechodzą automatyczne testy mapowania, GUI, instalatorów i dwóch niezależnych odczytów XInput. Zgodność nadal zależy od odbiornika i polityki sterowników systemu.
 
 ## Linux / CachyOS
 
@@ -50,4 +50,4 @@ Przed zmianą mapowań zatrzymaj kontrolery. Zamknięcie aplikacji zwalnia urzą
 
 Linux zachowuje poprzednie wersje. Instalator Windows nie usuwa profili; deinstalator zostawia wspólne sterowniki. Diagnostyka nie zapisuje historii klawiszy, ale zawiera identyfikatory — przejrzyj ją przed publikacją.
 
-Test akceptacyjny Windows: dwie gitary jednocześnie, kombinacje progów, oba kierunki strum, whammy, brak pisania klawiszy podczas gry, zatrzymanie/ponowny start i odłączenie odbiornika. Dopiero taki test zamknie etap release candidate.
+Test dwóch fizycznych gitar na Windowsie został potwierdzony przez właściciela. Przy zgłaszaniu problemu podaj wersję Windows, sterowników, tryb gitary i informację, czy problem występuje lokalnie, czy wyłącznie przez opcjonalny streaming.

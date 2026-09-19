@@ -26,7 +26,7 @@ jobs:
         shell: pwsh
         run: |
           $trial = Join-Path $env:RUNNER_TEMP 'ghvp-install-test'
-          $installer = (Resolve-Path 'artifacts/GHVirtualGamePad-0.2.0-rc.2-windows-x64-setup.exe').Path
+          $installer = (Resolve-Path 'artifacts/GHVirtualGamePad-0.2.0-windows-x64-setup.exe').Path
           $arguments = @('/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART', '/TASKS=""', "/DIR=`"$trial`"")
           $result = Start-Process -FilePath $installer -ArgumentList $arguments -Wait -PassThru -WindowStyle Hidden
           if ($result.ExitCode -ne 0) { throw "Installer failed: $($result.ExitCode)" }
@@ -39,6 +39,6 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: windows-installer
-          path: artifacts/GHVirtualGamePad-0.2.0-rc.2-windows-x64-setup.exe
+          path: artifacts/GHVirtualGamePad-0.2.0-windows-x64-setup.exe
           if-no-files-found: error
           retention-days: 30

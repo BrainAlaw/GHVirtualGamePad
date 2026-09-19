@@ -27,14 +27,14 @@ Built for DOYO guitars and games such as **Guitar Hero World Tour: Definitive Ed
 
 You need distinguishable input devices. If one receiver merges both guitars into identical keyboard events, software cannot recover which guitar sent them.
 
-## Platform status — 0.2.0-rc.2
+## Platform status — 0.2.0
 
-This is a **release candidate**, not a claim that every receiver and Windows security configuration has been validated.
+Version 0.2.0 is the first stable release. Compatibility still depends on the receiver, distribution and Windows driver policy; the table records what has actually been tested.
 
 | Platform | Native implementation | Verification |
 | --- | --- | --- |
 | Linux x86_64 / CachyOS | evdev capture + uinput controllers | Owner reports successful physical guitar use. Automated mapping, GUI and installer tests. |
-| Windows x64 | Interception capture + ViGEmBus Xbox 360 controllers | Keyboard enumeration and two distinct XInput reports verified on a Windows 11 machine. Two-guitar gameplay, suppression and fresh-driver installation still need hardware acceptance testing. |
+| Windows x64 | Interception capture + ViGEmBus Xbox 360 controllers | Owner-confirmed two-guitar gameplay, separate inputs and GHWT:DE compatibility fix on Windows. Native two-pad XInput diagnostics and automated installer tests pass. A clean driver installation has not been tested on every Windows security configuration. |
 
 Linux exposes an Xbox-layout uinput gamepad, not the Xbox USB protocol. Windows creates XInput-compatible Xbox 360 controllers. When streaming, the host's streaming software decides how to expose them to the game.
 
@@ -42,7 +42,7 @@ Linux exposes an Xbox-layout uinput gamepad, not the Xbox USB protocol. Windows 
 
 ### Linux / CachyOS
 
-Download `ghvirtualgamepad-0.2.0-rc.2-linux-x86_64.tar.gz`, extract it, then run **without sudo**:
+Download `ghvirtualgamepad-0.2.0-linux-x86_64.tar.gz`, extract it, then run **without sudo**:
 
 ```bash
 cd ghvirtualgamepad
@@ -58,7 +58,7 @@ Launch **GHVirtualGamePad** from your application menu. The bundle includes Pyth
 
 ### Windows
 
-Run `GHVirtualGamePad-0.2.0-rc.2-windows-x64-setup.exe`. It installs the application, icon, Start-menu shortcut and optional desktop shortcut. Python and Rust are **not required**.
+Run `GHVirtualGamePad-0.2.0-windows-x64-setup.exe`. It installs the application, icon, Start-menu shortcut and optional desktop shortcut. Python and Rust are **not required**.
 
 The installer offers missing dependencies using bundled, SHA-256-pinned upstream payloads:
 
@@ -146,7 +146,7 @@ python -m unittest discover -s tests -v
 python gui/app.py --demo --smoke-test
 ```
 
-Opt-in native Windows check: close games, then `python tools/check_windows.py target/debug/ghvirtualgamepad.exe`. It creates two temporary pads and reads distinct axis values through XInput, then enumerates keyboards **without capturing physical input**. It does not replace a two-guitar gameplay test.
+Opt-in native Windows check: close games, then `python tools/check_windows.py target/debug/ghvirtualgamepad.exe`. It creates two temporary pads and reads distinct axis values through XInput, then enumerates keyboards **without capturing physical input**. This diagnostic complements the owner-confirmed two-guitar gameplay test.
 
 See [release verification](docs/RELEASING.md), [changelog](CHANGELOG.md) and [dependency notices/source information](THIRD_PARTY.md).
 

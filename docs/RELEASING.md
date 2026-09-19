@@ -1,8 +1,8 @@
 # Release verification
 
-## 0.2.0-rc.2 scope
+## 0.2.0 stable scope
 
-Native Linux and Windows backends are implemented. Do not describe demo tests as physical-device acceptance. Until the Windows two-guitar checklist passes, publish only a labelled **pre-release**.
+Native Linux and Windows backends are implemented. The owner confirmed physical two-guitar gameplay on Windows after rc.2, including the GHWT:DE Extra compatibility mode. Stable status records that acceptance; it does not imply universal driver compatibility.
 
 ### Verified locally during implementation
 
@@ -21,17 +21,17 @@ Native Linux and Windows backends are implemented. Do not describe demo tests as
 
 System-wide input filters are not installed on CI. Local native tests used already-installed drivers, not a fresh driver installation.
 
-### Required before stable promotion
+### Completed stable acceptance and remaining compatibility coverage
 
-- Physical Windows guitars: separate capture, combinations, strum, whammy, no leaked original keys, stop/quit cleanup.
-- Fresh driver install/reboot with security settings unchanged.
-- Unplug/replug; Windows must stop/reselect, not trust recycled slots.
-- Local host game with both players; optional Moonlight/streaming regression on each supported client platform.
-- Linux permissions setup and two-player regression on the release bundle.
+- Physical Windows two-guitar gameplay and GHWT:DE compatibility were owner-confirmed after rc.2.
+- Linux permissions and two-player gameplay were owner-confirmed during development.
+- Automated workflows cover mapping, GUI, installation, upgrade, Windows uninstall and two independent XInput outputs.
+- Clean driver installation/reboot and varied Windows security policies remain compatibility coverage, not a blocker for stable 0.2.0.
+- Optional Moonlight/streaming and receiver hotplug behavior should continue to be included in regression reports.
 
 ## Publishing
 
-Run both installer workflows against the same commit after **Check** succeeds. Download artifacts, calculate SHA-256, and attach Linux tarball, Windows setup EXE and `SHA256SUMS.txt` to `v0.2.0-rc.2` at that exact commit. Do not substitute binaries from another commit.
+Run both installer workflows against the same commit after **Check** succeeds. Download artifacts, calculate SHA-256, and attach Linux tarball, Windows setup EXE and `SHA256SUMS.txt` to `v0.2.0` at that exact commit. Do not substitute binaries from another commit.
 
 Driver hashes/URLs: `tools/prepare_windows.py`. Notices and source/relinking instructions: `THIRD_PARTY.md`. Windows includes matching Interception library source and upstream terms.
 

@@ -1,6 +1,6 @@
 [package]
 name = "ghvirtualgamepad"
-version = "0.2.0-rc.2"
+version = "0.2.0"
 edition = "2021"
 license = "MIT"
 description = "Per-device USB keyboard to virtual gamepad mapper with digital whammy smoothing"
