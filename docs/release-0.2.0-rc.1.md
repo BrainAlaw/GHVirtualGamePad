@@ -35,6 +35,6 @@ Windows has a real backend, not just a demo. Keyboard enumeration and two distin
 
 Click **Save profiles**, back up the displayed config folder, close the old app, and install. Profiles live outside the application folder; Linux installation preserves them and keeps prior installed versions. The old test build does not expire. Linux and Windows use different physical input codes, so teach Windows bindings separately.
 
-Start controllers before connecting Moonlight. Map the resulting A/B/Y/X/LB frets, D-pad strum and Right Y whammy in the host game.
+Start controllers, then launch the local game and map A/B/Y/X/LB frets, D-pad strum and Right Y whammy. Moonlight and other streaming software are optional; when used, connect them after starting the controllers.
 
 **Następny test:** dwie fizyczne gitary na Windowsie — progi jednocześnie, strum, whammy, brak wpisywania klawiszy podczas gry oraz stop/ponowny start. To ostatni etap przed oznaczeniem wersji jako stabilnej.

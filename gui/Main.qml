@@ -215,7 +215,7 @@ ApplicationWindow {
                 onClicked: { bridge.toggle(); demoInput.forceActiveFocus() }
             }
         }
-        Label { text: "Stop: Ctrl+Esc while this window is focused. Closing the app releases devices. Start Moonlight after the controllers."; color: "#718098"; font.pixelSize: 11 }
+        Label { text: "Stop: Ctrl+Esc while this window is focused. Closing the app releases devices. Streaming is optional."; color: "#718098"; font.pixelSize: 11 }
     }
     Item {
         id: demoInput

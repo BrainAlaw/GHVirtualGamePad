@@ -26,7 +26,7 @@ System-wide input filters are not installed on CI. Local native tests used alrea
 - Physical Windows guitars: separate capture, combinations, strum, whammy, no leaked original keys, stop/quit cleanup.
 - Fresh driver install/reboot with security settings unchanged.
 - Unplug/replug; Windows must stop/reselect, not trust recycled slots.
-- Moonlight and host game with both players on each client platform.
+- Local host game with both players; optional Moonlight/streaming regression on each supported client platform.
 - Linux permissions setup and two-player regression on the release bundle.
 
 ## Publishing

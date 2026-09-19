@@ -37,10 +37,9 @@ Mapowania są zapisywane, ale na Windowsie odbiorniki trzeba wybrać przy każdy
 3. Kliknij element gitary, nazwę funkcji lub pole mapowania. Naciśnij i puść przycisk. Niepotrzebne funkcje mogą być puste.
 4. Whammy przypisz jak przycisk. **Press (ms)** to czas wychylenia, **Return (ms)** — powrotu osi.
 5. Powtórz dla gracza 2 z drugim odbiornikiem. Jedna gitara też działa.
-6. **Save profiles**, puść wszystkie przyciski, następnie **Start controllers**.
-7. Teraz uruchom/połącz Moonlight i przypisz kontrolery w grze.
+6. **Save profiles**, puść wszystkie przyciski, następnie **Start controllers**. Uruchom grę lokalnie i przypisz kontrolery. Jeżeli korzystasz z Moonlight lub innego streamingu, połącz go dopiero po uruchomieniu kontrolerów.
 
-Wyjście: progi A/B/Y/X/LB, strum D-pad góra/dół, Start/Back, Extra RB, whammy prawa oś Y. Linux tworzy gamepad uinput; Windows kontrolery XInput Xbox 360. Przy streamingu typ kontrolera po stronie gry zależy od hosta.
+Wyjście: progi A/B/Y/X/LB, strum D-pad góra/dół, Start/Back, Extra RB, whammy prawa oś Y. Linux tworzy gamepad uinput; Windows kontrolery XInput Xbox 360. Program działa lokalnie i nie wymaga Moonlighta ani VDI. Streaming jest opcjonalny; wtedy typ kontrolera po stronie gry zależy od hosta.
 
 Przed zmianą mapowań zatrzymaj kontrolery. Zamknięcie aplikacji zwalnia urządzenia. Ctrl+Esc działa tylko z fokusem okna. Podgląd nie blokuje klawiszy — zamknij pola czatu/haseł podczas nauki.
 

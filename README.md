@@ -9,7 +9,7 @@
 
 Turn two USB keyboard-mode guitars into **two independent virtual gamepads**, on Linux or Windows. Pick each receiver, click a control, press its physical button, and play.
 
-Built for DOYO guitars, **Guitar Hero World Tour: Definitive Edition** and **Moonlight**. This is a per-device keyboard-to-controller mapper: no hardcoded guitar layout, account, subscription or network service.
+Built for DOYO guitars and games such as **Guitar Hero World Tour: Definitive Edition**. Use the virtual controllers locally or pass them through streaming software such as Moonlight. This is a per-device keyboard-to-controller mapper: no hardcoded guitar layout, account, subscription or network service.
 
 **[Download installers](https://github.com/BrainAlaw/GHVirtualGamePad/releases) · [Polski](docs/README.pl.md) · [Report a problem](https://github.com/BrainAlaw/GHVirtualGamePad/issues)**
 
@@ -73,15 +73,14 @@ Save your work, approve UAC, and restart Windows if drivers were installed. Exis
 
 Windows mappings are saved, but **receivers must be selected each session**: Interception slot numbers are not persistent USB identities. After unplugging/replugging, stop and reselect the receiver. All guitar buttons must appear on the selected keyboard slot; Windows multi-slot aggregation is not implemented.
 
-## First song in seven steps
+## First song in six steps
 
 1. Put both guitars into **keyboard mode**. Both using hardware “Player 1” mode is fine if the OS sees separate devices.
 2. Select the first receiver for **Player 1**. Identify it by unplugging/replugging if necessary.
 3. Click a fret, function name or binding value. Press and release its physical control. Unused functions can remain blank.
 4. Map whammy as a button. **Press (ms)** controls travel to full deflection; **Return (ms)** controls spring-back.
 5. Switch to **Player 2**, choose the other receiver, and repeat. One guitar also works alone.
-6. Click **Save profiles**, release every physical control, then **Start controllers**.
-7. Launch/reconnect Moonlight **after** starting controllers, then bind both controllers in the game.
+6. Click **Save profiles**, release every physical control, then **Start controllers**. Launch the local game and bind both controllers. If you use Moonlight or another streaming solution, connect it after starting the controllers.
 
 Stop before editing. Close the app normally to release capture and virtual controllers. Ctrl+Esc stops them **while this window has focus**; it is not a global emergency shortcut. Never select your everyday keyboard or a receiver shared with a mouse. In preview mode, selected keyboard events still reach other apps: close chat/password fields while teaching bindings.
 
@@ -119,7 +118,7 @@ Windows uninstall leaves shared drivers because other applications may need them
 | No Linux inputs / cannot create pad | Use **Enable device access**, check polkit, replug the receiver. |
 | No Windows keyboards | Install Interception, reboot; confirm Windows did not block its driver. |
 | Windows cannot create controllers | Check ViGEmBus and free XInput slots; close other virtual-controller tools. XInput supports four slots. |
-| Moonlight does not see pads | Start controllers first, then restart/reconnect streaming. |
+| Streaming software does not see pads | Start controllers first, then restart/reconnect the streaming session. Local play does not require streaming. |
 | Keys still type in the game | Preview does not suppress input. Start controllers and verify device selection. |
 | Whammy behaves backward | Invert/rebind Right Y in the game. |
 | Pad remains after force-killing the app | Close normally whenever possible. If a Windows target remains, restart Windows. |
